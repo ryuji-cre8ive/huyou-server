@@ -15,17 +15,25 @@ import (
 // CreateShopItem is the resolver for the createShopItem field.
 func (r *mutationResolver) CreateShopItem(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error) {
 	shopItem := &model.ShopItem{
-		Title:  input.Title,
-		ID:     fmt.Sprintf("T%d", rand.Int()),
-		Seller: &model.User{ID: input.ID, Name: "user " + input.ID},
+		Title:       input.Title,
+		ID:          fmt.Sprintf("T%d", rand.Int()),
+		Description: input.Description,
+		Seller:      &model.User{ID: input.ID, Name: "user " + input.ID},
 	}
-	r.shopItems = append(r.shopItems, shopItem)
+	r.DB.Create(&shopItem)
 	return shopItem, nil
 }
 
 // Items is the resolver for the items field.
 func (r *queryResolver) Items(ctx context.Context) ([]*model.ShopItem, error) {
-	panic(fmt.Errorf("not implemented: Items - items"))
+	items := make([]*model.ShopItem, 0)
+	r.DB.Find(&items)
+	return items, nil
+}
+
+// UserID is the resolver for the userID field.
+func (r *shopItemResolver) UserID(ctx context.Context, obj *model.ShopItem) (string, error) {
+	panic(fmt.Errorf("not implemented: UserID - userID"))
 }
 
 // Mutation returns MutationResolver implementation.
@@ -34,5 +42,9 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// ShopItem returns ShopItemResolver implementation.
+func (r *Resolver) ShopItem() ShopItemResolver { return &shopItemResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type shopItemResolver struct{ *Resolver }

@@ -16,6 +16,7 @@ type ShopItem {
   description: String
   image: String!
   comments: [Comment]!
+  userID: String!
   seller: User!
   good: Int!
 }
@@ -23,6 +24,7 @@ type ShopItem {
 type Comment {
   id: ID!
   content: String!
+  userID: String!
   user: User!
 }
 
