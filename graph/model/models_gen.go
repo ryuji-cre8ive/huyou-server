@@ -3,24 +3,31 @@
 package model
 
 type Comment struct {
-	ID      string `json:"id" gorm:"primaryKey"`
+	ID      string `json:"id"`
 	Content string `json:"content"`
-	UserID	string	
-	User    *User  `json:"user" gorm:"foreignKey:UserID"`
+	UserID  string `json:"userID"`
+	User    *User  `json:"user"`
 }
 
 type NewShopItem struct {
-	ID          string  `json:"id" gorm:"primaryKey"`
+	ID          string  `json:"id"`
 	Title       string  `json:"title"`
-	Description *string `json:"description" gorm:"type:text"`
+	Description *string `json:"description"`
 	Image       string  `json:"image"`
 	Good        *int    `json:"good"`
 }
 
+type NewUser struct {
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Image      *string `json:"image"`
+	Assessment *int    `json:"assessment"`
+}
+
 type User struct {
-	ID         string      `json:"id" gorm:"primaryKey"`
+	ID         string      `json:"id"`
 	Name       string      `json:"name"`
 	Image      *string     `json:"image"`
 	Assessment *int        `json:"assessment"`
-	ShopItem   []*ShopItem `json:"ShopItem" gorm:"foreignKey:ID"`
+	ShopItem   []*ShopItem `json:"ShopItem"`
 }

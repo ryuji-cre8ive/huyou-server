@@ -39,7 +39,6 @@ type Config struct {
 type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
-	ShopItem() ShopItemResolver
 }
 
 type DirectiveRoot struct {
@@ -55,6 +54,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CreateShopItem func(childComplexity int, input model.NewShopItem) int
+		CreateUser     func(childComplexity int, input model.NewUser) int
 	}
 
 	Query struct {
@@ -67,7 +67,6 @@ type ComplexityRoot struct {
 		Good        func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Image       func(childComplexity int) int
-		Seller      func(childComplexity int) int
 		Title       func(childComplexity int) int
 		UserID      func(childComplexity int) int
 	}
@@ -83,12 +82,10 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateShopItem(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error)
+	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
 }
 type QueryResolver interface {
 	Items(ctx context.Context) ([]*model.ShopItem, error)
-}
-type ShopItemResolver interface {
-	UserID(ctx context.Context, obj *model.ShopItem) (string, error)
 }
 
 type executableSchema struct {
@@ -146,6 +143,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateShopItem(childComplexity, args["input"].(model.NewShopItem)), true
 
+	case "Mutation.createUser":
+		if e.complexity.Mutation.CreateUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.NewUser)), true
+
 	case "Query.items":
 		if e.complexity.Query.Items == nil {
 			break
@@ -187,13 +196,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ShopItem.Image(childComplexity), true
-
-	case "ShopItem.seller":
-		if e.complexity.ShopItem.Seller == nil {
-			break
-		}
-
-		return e.complexity.ShopItem.Seller(childComplexity), true
 
 	case "ShopItem.title":
 		if e.complexity.ShopItem.Title == nil {
@@ -253,6 +255,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputNewShopItem,
+		ec.unmarshalInputNewUser,
 	)
 	first := true
 
@@ -339,6 +342,21 @@ func (ec *executionContext) field_Mutation_createShopItem_args(ctx context.Conte
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNNewShopItem2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐNewShopItem(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewUser
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNewUser2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐNewUser(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -637,12 +655,10 @@ func (ec *executionContext) fieldContext_Mutation_createShopItem(ctx context.Con
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
-			case "userID":
-				return ec.fieldContext_ShopItem_userID(ctx, field)
-			case "seller":
-				return ec.fieldContext_ShopItem_seller(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
+			case "userID":
+				return ec.fieldContext_ShopItem_userID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -655,6 +671,73 @@ func (ec *executionContext) fieldContext_Mutation_createShopItem(ctx context.Con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createShopItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createUser(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateUser(rctx, fc.Args["input"].(model.NewUser))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "image":
+				return ec.fieldContext_User_image(ctx, field)
+			case "assessment":
+				return ec.fieldContext_User_assessment(ctx, field)
+			case "ShopItem":
+				return ec.fieldContext_User_ShopItem(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -710,12 +793,10 @@ func (ec *executionContext) fieldContext_Query_items(ctx context.Context, field 
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
-			case "userID":
-				return ec.fieldContext_ShopItem_userID(ctx, field)
-			case "seller":
-				return ec.fieldContext_ShopItem_seller(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
+			case "userID":
+				return ec.fieldContext_ShopItem_userID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1079,106 +1160,6 @@ func (ec *executionContext) fieldContext_ShopItem_comments(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _ShopItem_userID(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopItem_userID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.ShopItem().UserID(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopItem_userID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopItem",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopItem_seller(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopItem_seller(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Seller, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.User)
-	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopItem_seller(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopItem",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_User_id(ctx, field)
-			case "name":
-				return ec.fieldContext_User_name(ctx, field)
-			case "image":
-				return ec.fieldContext_User_image(ctx, field)
-			case "assessment":
-				return ec.fieldContext_User_assessment(ctx, field)
-			case "ShopItem":
-				return ec.fieldContext_User_ShopItem(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _ShopItem_good(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ShopItem_good(ctx, field)
 	if err != nil {
@@ -1218,6 +1199,50 @@ func (ec *executionContext) fieldContext_ShopItem_good(ctx context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ShopItem_userID(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ShopItem_userID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ShopItem_userID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ShopItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1439,12 +1464,10 @@ func (ec *executionContext) fieldContext_User_ShopItem(ctx context.Context, fiel
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
-			case "userID":
-				return ec.fieldContext_ShopItem_userID(ctx, field)
-			case "seller":
-				return ec.fieldContext_ShopItem_seller(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
+			case "userID":
+				return ec.fieldContext_ShopItem_userID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -3285,6 +3308,58 @@ func (ec *executionContext) unmarshalInputNewShopItem(ctx context.Context, obj i
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj interface{}) (model.NewUser, error) {
+	var it model.NewUser
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "name", "image", "assessment"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "image":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			it.Image, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "assessment":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("assessment"))
+			it.Assessment, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3365,6 +3440,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createShopItem(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createUser":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createUser(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -3461,14 +3545,14 @@ func (ec *executionContext) _ShopItem(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._ShopItem_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "title":
 
 			out.Values[i] = ec._ShopItem_title(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "description":
 
@@ -3479,48 +3563,28 @@ func (ec *executionContext) _ShopItem(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._ShopItem_image(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "comments":
 
 			out.Values[i] = ec._ShopItem_comments(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "userID":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._ShopItem_userID(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "seller":
-
-			out.Values[i] = ec._ShopItem_seller(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "good":
 
 			out.Values[i] = ec._ShopItem_good(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
+			}
+		case "userID":
+
+			out.Values[i] = ec._ShopItem_userID(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -3986,6 +4050,11 @@ func (ec *executionContext) unmarshalNNewShopItem2githubᚗcomᚋryujiᚑcre8ive
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
+	res, err := ec.unmarshalInputNewUser(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNShopItem2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx context.Context, sel ast.SelectionSet, v model.ShopItem) graphql.Marshaler {
 	return ec._ShopItem(ctx, sel, &v)
 }
@@ -4057,6 +4126,10 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNUser2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
+	return ec._User(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {

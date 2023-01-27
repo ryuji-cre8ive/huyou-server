@@ -16,9 +16,8 @@ type ShopItem {
   description: String
   image: String!
   comments: [Comment]!
-  userID: String!
-  seller: User!
   good: Int!
+  userID: String!
 }
 
 type Comment {
@@ -39,7 +38,14 @@ input NewShopItem {
   image: String!
   good: Int
 }
+input NewUser {
+  id: ID!
+  name: String!
+  image: String
+  assessment: Int
+}
 
 type Mutation {
   createShopItem(input: NewShopItem!): ShopItem!
+  createUser(input: NewUser!): User!
 }

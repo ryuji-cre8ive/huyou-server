@@ -6,6 +6,6 @@ type ShopItem struct {
 	Description *string    `json:"description" gorm:"type:text"`
 	Image       string     `json:"image"`
 	Comments    []*Comment `json:"comments" gorm:"foreignKey:ID"`
-	Seller      *User      `json:"seller" gorm:"foreignKey:ID"`
+	UserID      string      `json:"userID"`
 	Good        int        `json:"good"`
 }
