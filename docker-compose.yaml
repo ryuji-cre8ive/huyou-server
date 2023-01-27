@@ -14,6 +14,16 @@ services:
       - '5432:5432'
     volumes:  #マウントディレクトリ
       - /var/lib/postgres/data
+  
+  pgweb:
+    image: sosedoff/pgweb
+    ports:
+      - "8080:8081"
+    environment:
+      DATABASE_URL: postgres://postgres:huyouhuyou@db:5432/postgres?sslmode=disable
+    depends_on:
+      - db
+
 
 volumes:
   go-data:
