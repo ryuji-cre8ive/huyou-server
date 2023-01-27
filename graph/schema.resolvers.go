@@ -15,17 +15,32 @@ import (
 // CreateShopItem is the resolver for the createShopItem field.
 func (r *mutationResolver) CreateShopItem(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error) {
 	shopItem := &model.ShopItem{
-		Title:  input.Title,
-		ID:     fmt.Sprintf("T%d", rand.Int()),
-		Seller: &model.User{ID: input.ID, Name: "user " + input.ID},
+		Title:       input.Title,
+		ID:          fmt.Sprintf("T%d", rand.Int()),
+		Description: input.Description,
+		UserID:      "1",
 	}
-	r.shopItems = append(r.shopItems, shopItem)
+	r.DB.Create(&shopItem)
 	return shopItem, nil
+}
+
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	user := &model.User{
+		ID:         "1",
+		Name:       "Ryuji",
+		Assessment: input.Assessment,
+	}
+	r.DB.Create(&user)
+	fmt.Printf("user was created! %+v", user)
+	return user, nil
 }
 
 // Items is the resolver for the items field.
 func (r *queryResolver) Items(ctx context.Context) ([]*model.ShopItem, error) {
-	panic(fmt.Errorf("not implemented: Items - items"))
+	items := make([]*model.ShopItem, 0)
+	r.DB.Find(&items)
+	return items, nil
 }
 
 // Mutation returns MutationResolver implementation.
@@ -36,16 +51,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
-}
-func (r *queryResolver) ShopItems(ctx context.Context) ([]*model.ShopItem, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
-}

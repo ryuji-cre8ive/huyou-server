@@ -5,6 +5,7 @@ package model
 type Comment struct {
 	ID      string `json:"id"`
 	Content string `json:"content"`
+	UserID  string `json:"userID"`
 	User    *User  `json:"user"`
 }
 
@@ -14,6 +15,13 @@ type NewShopItem struct {
 	Description *string `json:"description"`
 	Image       string  `json:"image"`
 	Good        *int    `json:"good"`
+}
+
+type NewUser struct {
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Image      *string `json:"image"`
+	Assessment *int    `json:"assessment"`
 }
 
 type User struct {
