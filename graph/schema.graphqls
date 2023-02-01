@@ -15,20 +15,23 @@ type ShopItem {
   title: String!
   description: String
   image: String!
-  comments: [Comment]!
   good: Int!
   userID: String!
+  user: User!
+  comments: [Comment]
 }
 
 type Comment {
   id: ID!
   content: String!
   userID: String!
-  user: User!
+  shopItemID: ID!
 }
 
 type Query {
-  items: [ShopItem!]!
+  items: [ShopItem]
+  comments: [Comment]
+  users: [User]
 }
 
 input NewShopItem {
@@ -38,6 +41,7 @@ input NewShopItem {
   image: String!
   good: Int
 }
+
 input NewUser {
   id: ID!
   name: String!
@@ -45,7 +49,15 @@ input NewUser {
   assessment: Int
 }
 
+input NewComment {
+  id: ID!
+  content: String!
+  userID: String!
+  shopItemID: ID!
+}
+
 type Mutation {
   createShopItem(input: NewShopItem!): ShopItem!
   createUser(input: NewUser!): User!
+  createComment(input: NewComment!):Comment!
 }
