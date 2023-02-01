@@ -3,10 +3,17 @@
 package model
 
 type Comment struct {
-	ID      string `json:"id"`
-	Content string `json:"content"`
-	UserID  string `json:"userID"`
-	User    *User  `json:"user"`
+	ID         string `json:"id"`
+	Content    string `json:"content"`
+	UserID     string `json:"userID"`
+	ShopItemID string `json:"shopItemID"`
+}
+
+type NewComment struct {
+	ID         string `json:"id"`
+	Content    string `json:"content"`
+	UserID     string `json:"userID"`
+	ShopItemID string `json:"shopItemID"`
 }
 
 type NewShopItem struct {

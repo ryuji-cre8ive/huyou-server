@@ -16,6 +16,6 @@ func ConnectGORM() *gorm.DB {
 		panic(err.Error())
 	}
 
-	fmt.Printf("connect to db!!!")
+	fmt.Printf("connect to db!!!\n")
 	return db
 }

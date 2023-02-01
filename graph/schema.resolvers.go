@@ -32,8 +32,21 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 		Assessment: input.Assessment,
 	}
 	r.DB.Create(&user)
-	fmt.Printf("user was created! %+v", user)
+	fmt.Printf("user was created! %+v\n", user)
 	return user, nil
+}
+
+// CreateComment is the resolver for the createComment field.
+func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error) {
+	comment := &model.Comment{
+		ID:         input.ID,
+		Content:    input.Content,
+		UserID:     input.UserID,
+		ShopItemID: input.ShopItemID,
+	}
+	r.DB.Create(&comment)
+	fmt.Printf("comment was created! %+v\n", comment)
+	return comment, nil
 }
 
 // Items is the resolver for the items field.
@@ -43,11 +56,47 @@ func (r *queryResolver) Items(ctx context.Context) ([]*model.ShopItem, error) {
 	return items, nil
 }
 
+// Comments is the resolver for the comments field.
+func (r *queryResolver) Comments(ctx context.Context) ([]*model.Comment, error) {
+	comments := make([]*model.Comment, 0)
+	r.DB.Find(&comments)
+	return comments, nil
+}
+
+// Users is the resolver for the users field.
+func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
+	user := make([]*model.User, 0)
+	r.DB.Find(&user)
+	return user, nil
+}
+
+// User is the resolver for the user field.
+func (r *shopItemResolver) User(ctx context.Context, obj *model.ShopItem) (*model.User, error) {
+	var user *model.User
+	r.DB.Debug().Where("id = (?)", obj.UserID).Find(&user)
+	return user, nil
+}
+
+// ShopItem is the resolver for the ShopItem field.
+func (r *userResolver) ShopItem(ctx context.Context, obj *model.User) ([]*model.ShopItem, error) {
+	items := make([]*model.ShopItem, 0)
+	r.DB.Debug().Where("user_id = (?)", obj.ID).Find(&items)
+	return items, nil
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// ShopItem returns ShopItemResolver implementation.
+func (r *Resolver) ShopItem() ShopItemResolver { return &shopItemResolver{r} }
+
+// User returns UserResolver implementation.
+func (r *Resolver) User() UserResolver { return &userResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type shopItemResolver struct{ *Resolver }
+type userResolver struct{ *Resolver }

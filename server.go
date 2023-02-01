@@ -25,7 +25,7 @@ func main() {
 
 	db := db.ConnectGORM()
 
-	db.AutoMigrate(&model.ShopItem{}, &model.User{}, &model.Comment{})
+	db.AutoMigrate(&model.User{},&model.ShopItem{}, &model.Comment{})
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{DB: db}}))
 
