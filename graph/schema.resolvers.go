@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"fmt"
-	"math/rand"
 
 	"github.com/ryuji-cre8ive/huyou-server/graph/model"
 )
@@ -16,9 +15,10 @@ import (
 func (r *mutationResolver) CreateShopItem(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error) {
 	shopItem := &model.ShopItem{
 		Title:       input.Title,
-		ID:          fmt.Sprintf("T%d", rand.Int()),
+		ID:          input.ID,
 		Description: input.Description,
 		UserID:      "1",
+		Prise:       input.Prise,
 	}
 	r.DB.Create(&shopItem)
 	return shopItem, nil
@@ -53,7 +53,18 @@ func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewCom
 func (r *queryResolver) Items(ctx context.Context) ([]*model.ShopItem, error) {
 	items := make([]*model.ShopItem, 0)
 	r.DB.Find(&items)
+	fmt.Printf("items data: %+v\n", *items[0])
 	return items, nil
+}
+
+// Item is the resolver for the item field.
+func (r *queryResolver) Item(ctx context.Context, id string) (*model.ShopItem, error) {
+	var item *model.ShopItem
+	if err := r.DB.Where("id = (?)", id).First(&item).Error; err != nil {
+		return nil, err
+	}
+	fmt.Printf("shopItem: %+v\n", item)
+	return item, nil
 }
 
 // Comments is the resolver for the comments field.

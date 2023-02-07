@@ -8,4 +8,5 @@ type ShopItem struct {
 	Comments    []*Comment `json:"comments"`
 	UserID      string      `json:"userID"`
 	Good        int        `json:"good"`
+	Prise				int					`json:"prise"`
 }
