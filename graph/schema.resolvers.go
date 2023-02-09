@@ -82,6 +82,13 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 }
 
 // User is the resolver for the user field.
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	var user *model.User
+	r.DB.Debug().Where("id = (?)", id).Find(&user)
+	return user, nil
+}
+
+// User is the resolver for the user field.
 func (r *shopItemResolver) User(ctx context.Context, obj *model.ShopItem) (*model.User, error) {
 	var user *model.User
 	r.DB.Debug().Where("id = (?)", obj.UserID).Find(&user)
