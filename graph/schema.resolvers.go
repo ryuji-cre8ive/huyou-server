@@ -60,7 +60,7 @@ func (r *queryResolver) Items(ctx context.Context) ([]*model.ShopItem, error) {
 // Item is the resolver for the item field.
 func (r *queryResolver) Item(ctx context.Context, id string) (*model.ShopItem, error) {
 	var item *model.ShopItem
-	if err := r.DB.Where("id = (?)", id).First(&item).Error; err != nil {
+	if err := r.DB.Where("id = (?)", id).Limit(20).First(&item).Error; err != nil {
 		return nil, err
 	}
 	fmt.Printf("shopItem: %+v\n", item)
@@ -77,7 +77,7 @@ func (r *queryResolver) Comments(ctx context.Context) ([]*model.Comment, error) 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	user := make([]*model.User, 0)
-	r.DB.Find(&user)
+	r.DB.Limit(5).Find(&user)
 	return user, nil
 }
 
