@@ -26,15 +26,15 @@ type NewShopItem struct {
 }
 
 type NewUser struct {
-	ID         string  `json:"id"`
-	Name       string  `json:"name"`
-	Image      *string `json:"image"`
-	Assessment *int    `json:"assessment"`
+	Mail     string `json:"mail"`
+	Password string `json:"password"`
 }
 
 type User struct {
 	ID         string      `json:"id"`
 	Name       string      `json:"name"`
+	Mail       string      `json:"mail"`
+	Password   string      `json:"password"`
 	Image      *string     `json:"image"`
 	Assessment *int        `json:"assessment"`
 	ShopItem   []*ShopItem `json:"ShopItem"`
