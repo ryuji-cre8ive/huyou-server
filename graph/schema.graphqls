@@ -5,6 +5,8 @@
 type User {
   id: ID!
   name: String!
+  mail: String!
+  password: String!
   image: String
   assessment: Int
   ShopItem: [ShopItem!]
@@ -35,6 +37,7 @@ type Query {
   comments: [Comment]
   users: [User]
   user(id: ID!): User
+  userWithMail(mail: String!, password: String!): User
 }
 
 input NewShopItem {
@@ -47,10 +50,8 @@ input NewShopItem {
 }
 
 input NewUser {
-  id: ID!
-  name: String!
-  image: String
-  assessment: Int
+  mail: String!
+  password: String!
 }
 
 input NewComment {
@@ -62,6 +63,7 @@ input NewComment {
 
 type Mutation {
   createShopItem(input: NewShopItem!): ShopItem!
-  createUser(input: NewUser!): User!
+  createUser(mail: String!, password: String!): User!
   createComment(input: NewComment!):Comment!
+
 }

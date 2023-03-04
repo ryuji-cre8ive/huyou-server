@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ryuji-cre8ive/huyou-server/db"
 	"github.com/ryuji-cre8ive/huyou-server/graph/model"
 )
 
@@ -25,12 +26,25 @@ func (r *mutationResolver) CreateShopItem(ctx context.Context, input model.NewSh
 }
 
 // CreateUser is the resolver for the createUser field.
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	user := &model.User{
-		ID:         "1",
-		Name:       "Ryuji",
-		Assessment: input.Assessment,
+func (r *mutationResolver) CreateUser(ctx context.Context, mail string, password string) (*model.User, error) {
+	auth := &db.Auth{
+		Mail:     mail,
+		Password: password,
 	}
+
+	hasedPassword, err := auth.HashPassword()
+	if err != nil {
+		return nil, err
+	}
+
+	id := auth.GenerateRandomHash()
+
+	user := &model.User{
+		ID:       id,
+		Mail:     mail,
+		Password: hasedPassword,
+	}
+
 	r.DB.Create(&user)
 	fmt.Printf("user was created! %+v\n", user)
 	return user, nil
@@ -85,6 +99,27 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	var user *model.User
 	r.DB.Debug().Where("id = (?)", id).Find(&user)
+	return user, nil
+}
+
+// UserWithMail is the resolver for the userWithMail field.
+func (r *queryResolver) UserWithMail(ctx context.Context, mail string, password string) (*model.User, error) {
+	var user *model.User
+	result := r.DB.Where("mail = ?", mail).First(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	auth := db.Auth{
+		Mail:     mail,
+		Password: password,
+	}
+
+	hashedPassword := auth.CheckPasswordHash(password, user.Password)
+	if !hashedPassword {
+		return nil, nil
+	}
+
 	return user, nil
 }
 
