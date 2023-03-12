@@ -22,7 +22,7 @@ type NewShopItem struct {
 	Description *string `json:"description"`
 	Image       string  `json:"image"`
 	Good        *int    `json:"good"`
-	Prise       int     `json:"prise"`
+	Price       int     `json:"price"`
 }
 
 type NewUser struct {

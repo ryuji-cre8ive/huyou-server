@@ -56,7 +56,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CreateComment  func(childComplexity int, input model.NewComment) int
-		CreateShopItem func(childComplexity int, input model.NewShopItem) int
+		CreateShopItem func(childComplexity int, title string, description *string, image *string, price int, isContainDelivery bool, userID string) int
 		CreateUser     func(childComplexity int, mail string, password string) int
 	}
 
@@ -70,15 +70,16 @@ type ComplexityRoot struct {
 	}
 
 	ShopItem struct {
-		Comments    func(childComplexity int) int
-		Description func(childComplexity int) int
-		Good        func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Image       func(childComplexity int) int
-		Prise       func(childComplexity int) int
-		Title       func(childComplexity int) int
-		User        func(childComplexity int) int
-		UserID      func(childComplexity int) int
+		Comments          func(childComplexity int) int
+		Description       func(childComplexity int) int
+		Good              func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Image             func(childComplexity int) int
+		IsContainDelivery func(childComplexity int) int
+		Price             func(childComplexity int) int
+		Title             func(childComplexity int) int
+		User              func(childComplexity int) int
+		UserID            func(childComplexity int) int
 	}
 
 	User struct {
@@ -93,7 +94,7 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateShopItem(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error)
+	CreateShopItem(ctx context.Context, title string, description *string, image *string, price int, isContainDelivery bool, userID string) (*model.ShopItem, error)
 	CreateUser(ctx context.Context, mail string, password string) (*model.User, error)
 	CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error)
 }
@@ -177,7 +178,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateShopItem(childComplexity, args["input"].(model.NewShopItem)), true
+		return e.complexity.Mutation.CreateShopItem(childComplexity, args["title"].(string), args["description"].(*string), args["image"].(*string), args["price"].(int), args["isContainDelivery"].(bool), args["userID"].(string)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -283,12 +284,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ShopItem.Image(childComplexity), true
 
-	case "ShopItem.prise":
-		if e.complexity.ShopItem.Prise == nil {
+	case "ShopItem.isContainDelivery":
+		if e.complexity.ShopItem.IsContainDelivery == nil {
 			break
 		}
 
-		return e.complexity.ShopItem.Prise(childComplexity), true
+		return e.complexity.ShopItem.IsContainDelivery(childComplexity), true
+
+	case "ShopItem.price":
+		if e.complexity.ShopItem.Price == nil {
+			break
+		}
+
+		return e.complexity.ShopItem.Price(childComplexity), true
 
 	case "ShopItem.title":
 		if e.complexity.ShopItem.Title == nil {
@@ -468,15 +476,60 @@ func (ec *executionContext) field_Mutation_createComment_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_createShopItem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewShopItem
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewShopItem2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐNewShopItem(ctx, tmp)
+	var arg0 string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["input"] = arg0
+	args["title"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["description"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["description"] = arg1
+	var arg2 *string
+	if tmp, ok := rawArgs["image"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+		arg2, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["image"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["price"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("price"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["price"] = arg3
+	var arg4 bool
+	if tmp, ok := rawArgs["isContainDelivery"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isContainDelivery"))
+		arg4, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["isContainDelivery"] = arg4
+	var arg5 string
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg5, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg5
 	return args, nil
 }
 
@@ -801,7 +854,7 @@ func (ec *executionContext) _Mutation_createShopItem(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateShopItem(rctx, fc.Args["input"].(model.NewShopItem))
+		return ec.resolvers.Mutation().CreateShopItem(rctx, fc.Args["title"].(string), fc.Args["description"].(*string), fc.Args["image"].(*string), fc.Args["price"].(int), fc.Args["isContainDelivery"].(bool), fc.Args["userID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -836,14 +889,16 @@ func (ec *executionContext) fieldContext_Mutation_createShopItem(ctx context.Con
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
-			case "prise":
-				return ec.fieldContext_ShopItem_prise(ctx, field)
+			case "price":
+				return ec.fieldContext_ShopItem_price(ctx, field)
 			case "userID":
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
+			case "isContainDelivery":
+				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1044,14 +1099,16 @@ func (ec *executionContext) fieldContext_Query_items(ctx context.Context, field 
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
-			case "prise":
-				return ec.fieldContext_ShopItem_prise(ctx, field)
+			case "price":
+				return ec.fieldContext_ShopItem_price(ctx, field)
 			case "userID":
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
+			case "isContainDelivery":
+				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1105,14 +1162,16 @@ func (ec *executionContext) fieldContext_Query_item(ctx context.Context, field g
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
-			case "prise":
-				return ec.fieldContext_ShopItem_prise(ctx, field)
+			case "price":
+				return ec.fieldContext_ShopItem_price(ctx, field)
 			case "userID":
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
+			case "isContainDelivery":
+				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1659,9 +1718,9 @@ func (ec *executionContext) _ShopItem_image(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ShopItem_image(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1721,8 +1780,8 @@ func (ec *executionContext) fieldContext_ShopItem_good(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _ShopItem_prise(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopItem_prise(ctx, field)
+func (ec *executionContext) _ShopItem_price(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ShopItem_price(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1735,7 +1794,7 @@ func (ec *executionContext) _ShopItem_prise(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Prise, nil
+		return obj.Price, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1752,7 +1811,7 @@ func (ec *executionContext) _ShopItem_prise(ctx context.Context, field graphql.C
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_ShopItem_prise(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_ShopItem_price(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ShopItem",
 		Field:      field,
@@ -1915,6 +1974,50 @@ func (ec *executionContext) fieldContext_ShopItem_comments(ctx context.Context, 
 				return ec.fieldContext_Comment_shopItemID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Comment", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ShopItem_isContainDelivery(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsContainDelivery, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ShopItem_isContainDelivery(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ShopItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2224,14 +2327,16 @@ func (ec *executionContext) fieldContext_User_ShopItem(ctx context.Context, fiel
 				return ec.fieldContext_ShopItem_image(ctx, field)
 			case "good":
 				return ec.fieldContext_ShopItem_good(ctx, field)
-			case "prise":
-				return ec.fieldContext_ShopItem_prise(ctx, field)
+			case "price":
+				return ec.fieldContext_ShopItem_price(ctx, field)
 			case "userID":
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
 			case "comments":
 				return ec.fieldContext_ShopItem_comments(ctx, field)
+			case "isContainDelivery":
+				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -4071,7 +4176,7 @@ func (ec *executionContext) unmarshalInputNewShopItem(ctx context.Context, obj i
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "description", "image", "good", "prise"}
+	fieldsInOrder := [...]string{"id", "title", "description", "image", "good", "price"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4118,11 +4223,11 @@ func (ec *executionContext) unmarshalInputNewShopItem(ctx context.Context, obj i
 			if err != nil {
 				return it, err
 			}
-		case "prise":
+		case "price":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("prise"))
-			it.Prise, err = ec.unmarshalNInt2int(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("price"))
+			it.Price, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4486,9 +4591,9 @@ func (ec *executionContext) _ShopItem(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "prise":
+		case "price":
 
-			out.Values[i] = ec._ShopItem_prise(ctx, field, obj)
+			out.Values[i] = ec._ShopItem_price(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -4524,6 +4629,13 @@ func (ec *executionContext) _ShopItem(ctx context.Context, sel ast.SelectionSet,
 
 			out.Values[i] = ec._ShopItem_comments(ctx, field, obj)
 
+		case "isContainDelivery":
+
+			out.Values[i] = ec._ShopItem_isContainDelivery(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4991,11 +5103,6 @@ func (ec *executionContext) unmarshalNNewComment2githubᚗcomᚋryujiᚑcre8ive�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewShopItem2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐNewShopItem(ctx context.Context, v interface{}) (model.NewShopItem, error) {
-	res, err := ec.unmarshalInputNewShopItem(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNShopItem2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx context.Context, sel ast.SelectionSet, v model.ShopItem) graphql.Marshaler {
 	return ec._ShopItem(ctx, sel, &v)
 }
@@ -5017,6 +5124,27 @@ func (ec *executionContext) unmarshalNString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNString2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	res := graphql.MarshalString(*v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

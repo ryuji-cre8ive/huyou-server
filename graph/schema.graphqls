@@ -18,10 +18,11 @@ type ShopItem {
   description: String
   image: String!
   good: Int!
-  prise: Int!
+  price: Int!
   userID: String!
   user: User!
   comments: [Comment]
+  isContainDelivery: Boolean!
 }
 
 type Comment {
@@ -46,7 +47,7 @@ input NewShopItem {
   description: String
   image: String!
   good: Int
-  prise: Int!
+  price: Int!
 }
 
 input NewUser {
@@ -62,8 +63,7 @@ input NewComment {
 }
 
 type Mutation {
-  createShopItem(input: NewShopItem!): ShopItem!
+  createShopItem(title: String!, description: String, image: String, price: Int!, isContainDelivery: Boolean!, userID: String!): ShopItem!
   createUser(mail: String!, password: String!): User!
-  createComment(input: NewComment!):Comment!
-
+  createComment(input: NewComment!): Comment!
 }

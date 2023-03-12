@@ -13,13 +13,22 @@ import (
 )
 
 // CreateShopItem is the resolver for the createShopItem field.
-func (r *mutationResolver) CreateShopItem(ctx context.Context, input model.NewShopItem) (*model.ShopItem, error) {
+func (r *mutationResolver) CreateShopItem(ctx context.Context, title string, description *string, image *string, price int, isContainDelivery bool, userID string) (*model.ShopItem, error) {
+	auth := &db.Auth{
+		Mail:     "random",
+		Password: "random",
+	}
+
+	id := auth.GenerateRandomHash()
+
 	shopItem := &model.ShopItem{
-		Title:       input.Title,
-		ID:          input.ID,
-		Description: input.Description,
-		UserID:      "1",
-		Prise:       input.Prise,
+		ID:                id,
+		Title:             title,
+		Description:       description,
+		UserID:            userID,
+		Price:             price,
+		IsContainDelivery: isContainDelivery,
+		Image:             image,
 	}
 	r.DB.Create(&shopItem)
 	return shopItem, nil
@@ -153,3 +162,16 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type shopItemResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *shopItemResolver) IsContainDelivery(ctx context.Context, obj *model.ShopItem) (bool, error) {
+	panic(fmt.Errorf("not implemented: IsContainDelivery - isContainDelivery"))
+}
+func (r *shopItemResolver) Price(ctx context.Context, obj *model.ShopItem) (int, error) {
+	panic(fmt.Errorf("not implemented: Price - price"))
+}
