@@ -21,8 +21,8 @@ type ShopItem {
   price: Int!
   userID: String!
   user: User!
-  comments: [Comment]
   isContainDelivery: Boolean!
+  comments: [Comment]
 }
 
 type Comment {
@@ -33,26 +33,19 @@ type Comment {
 }
 
 type Query {
-  items: [ShopItem]
-  item(id: ID!): ShopItem
-  comments: [Comment]
-  users: [User]
+  items: [ShopItem!]!
+  item(id: ID!): ShopItem!
+  comments: [Comment]!
+  users: [User!]!
   user(id: ID!): User
   userWithMail(mail: String!, password: String!): User
 }
 
-input NewShopItem {
-  id: ID!
-  title: String!
-  description: String
-  image: String!
-  good: Int
-  price: Int!
-}
-
 input NewUser {
-  mail: String!
-  password: String!
+  id: ID!
+  name: String!
+  image: String
+  assessment: Int
 }
 
 input NewComment {
@@ -63,7 +56,7 @@ input NewComment {
 }
 
 type Mutation {
-  createShopItem(title: String!, description: String, image: String, price: Int!, isContainDelivery: Boolean!, userID: String!): ShopItem!
+  createShopItem(title: String!, description: String, image: String, price: Int!, isContainDelivery: Boolean!, userID: String!): ShopItem
   createUser(mail: String!, password: String!): User!
-  createComment(input: NewComment!): Comment!
+  createComment(input: NewComment!):Comment!
 }

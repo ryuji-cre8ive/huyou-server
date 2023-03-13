@@ -16,18 +16,11 @@ type NewComment struct {
 	ShopItemID string `json:"shopItemID"`
 }
 
-type NewShopItem struct {
-	ID          string  `json:"id"`
-	Title       string  `json:"title"`
-	Description *string `json:"description"`
-	Image       string  `json:"image"`
-	Good        *int    `json:"good"`
-	Price       int     `json:"price"`
-}
-
 type NewUser struct {
-	Mail     string `json:"mail"`
-	Password string `json:"password"`
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Image      *string `json:"image"`
+	Assessment *int    `json:"assessment"`
 }
 
 type User struct {

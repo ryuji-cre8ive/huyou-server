@@ -377,7 +377,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputNewComment,
-		ec.unmarshalInputNewShopItem,
 		ec.unmarshalInputNewUser,
 	)
 	first := true
@@ -861,14 +860,11 @@ func (ec *executionContext) _Mutation_createShopItem(ctx context.Context, field 
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.ShopItem)
 	fc.Result = res
-	return ec.marshalNShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, field.Selections, res)
+	return ec.marshalOShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createShopItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -895,10 +891,10 @@ func (ec *executionContext) fieldContext_Mutation_createShopItem(ctx context.Con
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
-			case "comments":
-				return ec.fieldContext_ShopItem_comments(ctx, field)
 			case "isContainDelivery":
 				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
+			case "comments":
+				return ec.fieldContext_ShopItem_comments(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1074,11 +1070,14 @@ func (ec *executionContext) _Query_items(ctx context.Context, field graphql.Coll
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*model.ShopItem)
 	fc.Result = res
-	return ec.marshalOShopItem2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, field.Selections, res)
+	return ec.marshalNShopItem2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_items(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1105,10 +1104,10 @@ func (ec *executionContext) fieldContext_Query_items(ctx context.Context, field 
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
-			case "comments":
-				return ec.fieldContext_ShopItem_comments(ctx, field)
 			case "isContainDelivery":
 				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
+			case "comments":
+				return ec.fieldContext_ShopItem_comments(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1137,11 +1136,14 @@ func (ec *executionContext) _Query_item(ctx context.Context, field graphql.Colle
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.ShopItem)
 	fc.Result = res
-	return ec.marshalOShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, field.Selections, res)
+	return ec.marshalNShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_item(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1168,10 +1170,10 @@ func (ec *executionContext) fieldContext_Query_item(ctx context.Context, field g
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
-			case "comments":
-				return ec.fieldContext_ShopItem_comments(ctx, field)
 			case "isContainDelivery":
 				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
+			case "comments":
+				return ec.fieldContext_ShopItem_comments(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -1211,11 +1213,14 @@ func (ec *executionContext) _Query_comments(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*model.Comment)
 	fc.Result = res
-	return ec.marshalOComment2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐComment(ctx, field.Selections, res)
+	return ec.marshalNComment2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐComment(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_comments(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1262,11 +1267,14 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1928,6 +1936,50 @@ func (ec *executionContext) fieldContext_ShopItem_user(ctx context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _ShopItem_isContainDelivery(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsContainDelivery, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ShopItem_isContainDelivery(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ShopItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ShopItem_comments(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ShopItem_comments(ctx, field)
 	if err != nil {
@@ -1974,50 +2026,6 @@ func (ec *executionContext) fieldContext_ShopItem_comments(ctx context.Context, 
 				return ec.fieldContext_Comment_shopItemID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Comment", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopItem_isContainDelivery(ctx context.Context, field graphql.CollectedField, obj *model.ShopItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsContainDelivery, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopItem_isContainDelivery(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopItem",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2333,10 +2341,10 @@ func (ec *executionContext) fieldContext_User_ShopItem(ctx context.Context, fiel
 				return ec.fieldContext_ShopItem_userID(ctx, field)
 			case "user":
 				return ec.fieldContext_ShopItem_user(ctx, field)
-			case "comments":
-				return ec.fieldContext_ShopItem_comments(ctx, field)
 			case "isContainDelivery":
 				return ec.fieldContext_ShopItem_isContainDelivery(ctx, field)
+			case "comments":
+				return ec.fieldContext_ShopItem_comments(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopItem", field.Name)
 		},
@@ -4169,14 +4177,14 @@ func (ec *executionContext) unmarshalInputNewComment(ctx context.Context, obj in
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputNewShopItem(ctx context.Context, obj interface{}) (model.NewShopItem, error) {
-	var it model.NewShopItem
+func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj interface{}) (model.NewUser, error) {
+	var it model.NewUser
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "description", "image", "good", "price"}
+	fieldsInOrder := [...]string{"id", "name", "image", "assessment"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4191,19 +4199,11 @@ func (ec *executionContext) unmarshalInputNewShopItem(ctx context.Context, obj i
 			if err != nil {
 				return it, err
 			}
-		case "title":
+		case "name":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-			it.Title, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "description":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4211,59 +4211,15 @@ func (ec *executionContext) unmarshalInputNewShopItem(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
-			it.Image, err = ec.unmarshalNString2string(ctx, v)
+			it.Image, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "good":
+		case "assessment":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("good"))
-			it.Good, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "price":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("price"))
-			it.Price, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj interface{}) (model.NewUser, error) {
-	var it model.NewUser
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"mail", "password"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "mail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mail"))
-			it.Mail, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "password":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-			it.Password, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("assessment"))
+			it.Assessment, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4355,9 +4311,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createShopItem(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createUser":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -4416,6 +4369,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_items(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -4436,6 +4392,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_item(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -4456,6 +4415,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_comments(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -4476,6 +4438,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_users(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -4625,10 +4590,6 @@ func (ec *executionContext) _ShopItem(ctx context.Context, sel ast.SelectionSet,
 				return innerFunc(ctx)
 
 			})
-		case "comments":
-
-			out.Values[i] = ec._ShopItem_comments(ctx, field, obj)
-
 		case "isContainDelivery":
 
 			out.Values[i] = ec._ShopItem_isContainDelivery(ctx, field, obj)
@@ -4636,6 +4597,10 @@ func (ec *executionContext) _ShopItem(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "comments":
+
+			out.Values[i] = ec._ShopItem_comments(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5058,6 +5023,44 @@ func (ec *executionContext) marshalNComment2githubᚗcomᚋryujiᚑcre8iveᚋhuy
 	return ec._Comment(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNComment2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐComment(ctx context.Context, sel ast.SelectionSet, v []*model.Comment) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOComment2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐComment(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) marshalNComment2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐComment(ctx context.Context, sel ast.SelectionSet, v *model.Comment) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -5105,6 +5108,50 @@ func (ec *executionContext) unmarshalNNewComment2githubᚗcomᚋryujiᚑcre8ive�
 
 func (ec *executionContext) marshalNShopItem2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx context.Context, sel ast.SelectionSet, v model.ShopItem) graphql.Marshaler {
 	return ec._ShopItem(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNShopItem2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.ShopItem) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx context.Context, sel ast.SelectionSet, v *model.ShopItem) graphql.Marshaler {
@@ -5155,6 +5202,50 @@ func (ec *executionContext) marshalNString2ᚖstring(ctx context.Context, sel as
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
@@ -5510,47 +5601,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
-func (ec *executionContext) marshalOShopItem2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx context.Context, sel ast.SelectionSet, v []*model.ShopItem) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOShopItem2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItem(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
-}
-
 func (ec *executionContext) marshalOShopItem2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐShopItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.ShopItem) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -5619,47 +5669,6 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
 }
 
 func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
