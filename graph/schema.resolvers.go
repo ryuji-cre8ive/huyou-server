@@ -59,6 +59,19 @@ func (r *mutationResolver) CreateUser(ctx context.Context, mail string, password
 	return user, nil
 }
 
+// AppendNameForCreatedUser is the resolver for the appendNameForCreatedUser field.
+func (r *mutationResolver) AppendNameForCreatedUser(ctx context.Context, name string, image string, userID string) (*model.User, error) {
+	var user *model.User
+	fmt.Println("user id: ", userID)
+	r.DB.Where("id = (?)", userID).Find(&user)
+	firstAssessment := 0
+	user.Name = name
+	user.Image = &image
+	user.Assessment = &firstAssessment
+	r.DB.Save(&user)
+	return user, nil
+}
+
 // CreateComment is the resolver for the createComment field.
 func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error) {
 	comment := &model.Comment{
