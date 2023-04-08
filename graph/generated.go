@@ -55,9 +55,10 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateComment  func(childComplexity int, input model.NewComment) int
-		CreateShopItem func(childComplexity int, title string, description *string, image *string, price int, isContainDelivery bool, userID string) int
-		CreateUser     func(childComplexity int, mail string, password string) int
+		AppendNameForCreatedUser func(childComplexity int, name string, image string, userID string) int
+		CreateComment            func(childComplexity int, input model.NewComment) int
+		CreateShopItem           func(childComplexity int, title string, description *string, image *string, price int, isContainDelivery bool, userID string) int
+		CreateUser               func(childComplexity int, mail string, password string) int
 	}
 
 	Query struct {
@@ -96,6 +97,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreateShopItem(ctx context.Context, title string, description *string, image *string, price int, isContainDelivery bool, userID string) (*model.ShopItem, error)
 	CreateUser(ctx context.Context, mail string, password string) (*model.User, error)
+	AppendNameForCreatedUser(ctx context.Context, name string, image string, userID string) (*model.User, error)
 	CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error)
 }
 type QueryResolver interface {
@@ -155,6 +157,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Comment.UserID(childComplexity), true
+
+	case "Mutation.appendNameForCreatedUser":
+		if e.complexity.Mutation.AppendNameForCreatedUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_appendNameForCreatedUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AppendNameForCreatedUser(childComplexity, args["name"].(string), args["image"].(string), args["userID"].(string)), true
 
 	case "Mutation.createComment":
 		if e.complexity.Mutation.CreateComment == nil {
@@ -456,6 +470,39 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_appendNameForCreatedUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["image"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["image"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg2
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -978,6 +1025,77 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_appendNameForCreatedUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_appendNameForCreatedUser(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AppendNameForCreatedUser(rctx, fc.Args["name"].(string), fc.Args["image"].(string), fc.Args["userID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋryujiᚑcre8iveᚋhuyouᚑserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_appendNameForCreatedUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "mail":
+				return ec.fieldContext_User_mail(ctx, field)
+			case "password":
+				return ec.fieldContext_User_password(ctx, field)
+			case "image":
+				return ec.fieldContext_User_image(ctx, field)
+			case "assessment":
+				return ec.fieldContext_User_assessment(ctx, field)
+			case "ShopItem":
+				return ec.fieldContext_User_ShopItem(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_appendNameForCreatedUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -4315,6 +4433,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createUser(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "appendNameForCreatedUser":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_appendNameForCreatedUser(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
