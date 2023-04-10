@@ -29,7 +29,7 @@ func main() {
 	db.AutoMigrate(&model.User{},&model.ShopItem{}, &model.Comment{})
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:8080", "https://huyou.vercel.app", "https://server-6fldog5s3a-uc.a.run.app"},
+		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:8080", os.Getenv("PROD_URL"), os.Getenv("PROD_VERCEL_URL"), os.Getenv("PROD_NETLIFY_URL")},
 		AllowCredentials: true,
 	})
 
