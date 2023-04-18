@@ -9,6 +9,13 @@ type Comment struct {
 	ShopItemID string `json:"shopItemID"`
 }
 
+type Follower struct {
+	ID           string  `json:"id"`
+	UserID       string  `json:"userID"`
+	TargetUserID string  `json:"targetUserID"`
+	TargetUser   []*User `json:"targetUser" gorm:"many2many:follows;foreignKey:TargetUserID"`
+}
+
 type NewComment struct {
 	ID         string `json:"id"`
 	Content    string `json:"content"`
@@ -31,4 +38,5 @@ type User struct {
 	Image      *string     `json:"image"`
 	Assessment *int        `json:"assessment"`
 	ShopItem   []*ShopItem `json:"ShopItem"`
+	Followers  []*Follower `json:"Followers"`
 }
