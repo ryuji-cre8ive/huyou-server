@@ -10,6 +10,7 @@ import (
 
 	"github.com/ryuji-cre8ive/huyou-server/db"
 	"github.com/ryuji-cre8ive/huyou-server/graph/model"
+	"github.com/ryuji-cre8ive/huyou-server/lib"
 )
 
 // CreateShopItem is the resolver for the createShopItem field.
@@ -60,7 +61,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, mail string, password
 }
 
 // AppendNameForCreatedUser is the resolver for the appendNameForCreatedUser field.
-func (r *mutationResolver) AppendNameForCreatedUser(ctx context.Context, name string, image string, userID string) (*model.User, error) {
+func (r *mutationResolver) AppendNameForCreatedUser(ctx context.Context, image string, name string, userID string) (*model.User, error) {
 	var user *model.User
 	fmt.Println("user id: ", userID)
 	r.DB.Where("id = (?)", userID).Find(&user)
@@ -83,6 +84,36 @@ func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewCom
 	r.DB.Create(&comment)
 	fmt.Printf("comment was created! %+v\n", comment)
 	return comment, nil
+}
+
+// Follow is the resolver for the follow field.
+func (r *mutationResolver) Follow(ctx context.Context, userID string, targetUserID string) (*model.Follower, error) {
+	id := lib.GenerateRandomHash()
+	follower := &model.Follower{
+		ID:           id,
+		UserID:       userID,
+		TargetUserID: targetUserID,
+	}
+	fmt.Println("follow", follower, "was created!")
+	r.DB.Create(&follower)
+	return follower, nil
+}
+
+// Unfollow is the resolver for the unfollow field.
+func (r *mutationResolver) Unfollow(ctx context.Context, userID string, targetUserID string) (bool, error) {
+	var follower *model.Follower
+	err := r.DB.Where("user_id = ? AND target_user_id = ?", userID, targetUserID).First(&follower).Error
+	if err != nil {
+		return false, err
+	}
+
+	fmt.Printf("delete follower: %+v", follower)
+	err = r.DB.Delete(&follower).Error
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // Items is the resolver for the items field.
@@ -113,7 +144,7 @@ func (r *queryResolver) Comments(ctx context.Context) ([]*model.Comment, error) 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	user := make([]*model.User, 0)
-	r.DB.Limit(5).Find(&user)
+	r.DB.Find(&user)
 	return user, nil
 }
 
@@ -143,6 +174,21 @@ func (r *queryResolver) UserWithMail(ctx context.Context, mail string, password 
 	}
 
 	return user, nil
+}
+
+// Following is the resolver for the following field.
+func (r *queryResolver) Following(ctx context.Context, userID string) ([]*model.Follower, error) {
+	followingUser := make([]*model.Follower, 0)
+	r.DB.Debug().Where("user_id = (?)", userID).Find(&followingUser)
+	fmt.Printf("followingUser: %+v", followingUser)
+	return followingUser, nil
+}
+
+// Followers is the resolver for the followers field.
+func (r *queryResolver) Followers(ctx context.Context, targetUserID string) ([]*model.Follower, error) {
+	followers := make([]*model.Follower, 0)
+	r.DB.Debug().Where("target_user_id = (?)", targetUserID).Find(&followers)
+	return followers, nil
 }
 
 // User is the resolver for the user field.

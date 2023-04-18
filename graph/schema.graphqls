@@ -10,6 +10,7 @@ type User {
   image: String
   assessment: Int
   ShopItem: [ShopItem!]
+  Followers: [Follower!]!
 }
 
 type ShopItem {
@@ -32,6 +33,13 @@ type Comment {
   shopItemID: ID!
 }
 
+type Follower {
+  id: ID!
+  userID: String!
+  targetUserID: String!
+  targetUser: [User!]!
+}
+
 type Query {
   items: [ShopItem!]!
   item(id: ID!): ShopItem!
@@ -39,6 +47,8 @@ type Query {
   users: [User!]!
   user(id: ID!): User
   userWithMail(mail: String!, password: String!): User
+  following(userId: ID!): [Follower]!
+  followers(targetUserId: ID!): [Follower]!
 }
 
 input NewUser {
@@ -56,8 +66,21 @@ input NewComment {
 }
 
 type Mutation {
-  createShopItem(title: String!, description: String, image: String, price: Int!, isContainDelivery: Boolean!, userID: String!): ShopItem
+  createShopItem(
+    title: String!
+    description: String
+    image: String
+    price: Int!
+    isContainDelivery: Boolean!
+    userID: String!
+  ): ShopItem
   createUser(mail: String!, password: String!): User!
-  appendNameForCreatedUser(name: String!, image: String!, userID: String!): User!
-  createComment(input: NewComment!):Comment!
+  appendNameForCreatedUser(
+    image: String!
+    name: String!
+    userID: String!
+  ): User!
+  createComment(input: NewComment!): Comment!
+  follow(userId: ID!, targetUserId: ID!): Follower!
+  unfollow(userId: ID!, targetUserId: ID!): Boolean!
 }
