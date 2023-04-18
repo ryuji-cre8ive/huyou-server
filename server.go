@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
-	"github.com/rs/cors"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -26,7 +26,7 @@ func main() {
 
 	db := db.ConnectGORM()
 
-	db.AutoMigrate(&model.User{},&model.ShopItem{}, &model.Comment{})
+	db.AutoMigrate(&model.User{}, &model.ShopItem{}, &model.Comment{}, &model.Follower{})
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:8080", os.Getenv("PROD_URL"), os.Getenv("PROD_VERCEL_URL"), os.Getenv("PROD_NETLIFY_URL")},
