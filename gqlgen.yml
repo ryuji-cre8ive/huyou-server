@@ -69,3 +69,7 @@ models:
     fields:
       User:
         resolver: true
+  Follower:
+    fields:
+      User:
+        resolver: true
